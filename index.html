@@ -1057,7 +1057,6 @@
                     });
 
                     let sheetsLayoutData = [];
-                    let currentSheetIdGlobal = 0;
                     let usedStockItemOriginalIds = [];
 
                     // --- चरण 1: ग्रुप्स को रखने की कोशिश करें ---
@@ -1077,7 +1076,9 @@
                         if (!groupSuccessfullyPlaced) {
                             for (let stockIdx = 0; stockIdx < stockItems.length; stockIdx++) {
                                 const stockDefinition = stockItems[stockIdx];
-                                const tempNewSheet = createNewSheet(++currentSheetIdGlobal, stockDefinition);
+                                // --- ID को सही समय पर असाइन करें ---
+                                const newSheetId = sheetsLayoutData.length + 1;
+                                const tempNewSheet = createNewSheet(newSheetId, stockDefinition);
 
                                 if (tryPlaceGroupOnSheet(groupPieces, tempNewSheet, kerfWidth, strategy)) {
                                     sheetsLayoutData.push(tempNewSheet);
@@ -1114,7 +1115,9 @@
                              let placedOnNewSheet = false;
                             for (let stockIdx = 0; stockIdx < stockItems.length; stockIdx++) {
                                 const stockDefinition = stockItems[stockIdx];
-                                const newSheet = createNewSheet(++currentSheetIdGlobal, stockDefinition);
+                                // --- ID को सही समय पर असाइन करें ---
+                                const newSheetId = sheetsLayoutData.length + 1;
+                                const newSheet = createNewSheet(newSheetId, stockDefinition);
                                 
                                 if (tryPlacePieceOnSheet(piece, newSheet, kerfWidth, strategy)) {
                                     sheetsLayoutData.push(newSheet);
@@ -3881,10 +3884,12 @@
                 sheet.placedPieces.forEach(p => {
                     rows.push([
                         sheet.id, sheet.name, p.originalId, p.name, p.instanceNum,
-                        convertFromCm(p.placedWidth, currentUnit), convertFromCm(p.placedLength, currentUnit),
+                        convertFromCm(p.placedWidth, currentUnit),
+                        convertFromCm(p.placedLength, currentUnit),
                         p.isRotated ? "Yes" : "No",
                         p.groupName || "",
-                        convertFromCm(p.x, currentUnit), convertFromCm(p.y, currentUnit)
+                        convertFromCm(p.x, currentUnit),
+                        convertFromCm(p.y, currentUnit)
                     ]);
                 });
             });
@@ -4256,4 +4261,4 @@
         });
     </script>
 </body>
-</html>
+    </html>
